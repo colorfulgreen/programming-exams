@@ -1,0 +1,2 @@
+int x12, y = 1, num_stu = 89, a[30], *p = 'Sum';
+Sum = num+x12*y;
