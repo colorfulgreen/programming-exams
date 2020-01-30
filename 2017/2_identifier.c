@@ -3,7 +3,6 @@
  * 2. 分离标识符
  * 3. 查找标识符
  *
- * TODO 错误识别了 s='Hi' 中的 Hi 为变量
  */
 
 #include <stdio.h>
@@ -28,11 +27,11 @@ int valid(char c) {
 }
 
 
-void extract_identifiers(char *clause, int skip_first, char **identifiers, int *n_identifiers) 
+void extract_identifiers(char *clause, int is_declaration, char **identifiers, int *n_identifiers) 
 {
     int len = strlen(clause);
     int start = 0, end = 0;
-    if(skip_first == 1) {
+    if(is_declaration == 1) {
         for(; valid(clause[start]) && start < len; start++)
             ;
     }
@@ -49,7 +48,12 @@ void extract_identifiers(char *clause, int skip_first, char **identifiers, int *
         strncpy(s, clause + start, end-start);
         identifiers[(*n_identifiers)++] = s;
 
-        start = end + 1;
+        start = end;
+
+        /* 声明语句中，逗号后才会出现下一个标识符 */
+        if(is_declaration)
+            for(; clause[start] != ',' && start < len; start++)
+                ;
     }
 }
 
